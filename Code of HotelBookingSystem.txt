@@ -1,0 +1,143 @@
+import java.util.*;
+
+class Room {
+    private int roomNumber;
+    private boolean isAvailable;
+    private double price;
+    private String dimensions;
+
+    public Room(int roomNumber, double price, String dimensions) {
+        this.roomNumber = roomNumber;
+        this.price = price;
+        this.dimensions = dimensions;
+        this.isAvailable = true;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void bookRoom() {
+        isAvailable = false;
+    }
+
+    public void freeRoom() {
+        isAvailable = true;
+    }
+
+    public String getDimensions() {
+        return dimensions;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+
+class Hotel {
+    private List<Room> rooms;
+
+    public Hotel() {
+        this.rooms = new ArrayList<>();
+    }
+
+    public void addRoom(Room room) {
+        rooms.add(room);
+    }
+
+    public void displayAvailableRooms() {
+        System.out.println("Available Rooms:");
+        for (Room room : rooms) {
+            if (room.isAvailable()) {
+                System.out.println("Room " + room.getRoomNumber() + " (" + room.getDimensions() + "), Price: Rs." + room.getPrice() + "/-");
+            }
+        }
+    }
+
+    public boolean checkIn(int roomNumber) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber && room.isAvailable()) {
+                room.bookRoom();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkOut(int roomNumber) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber && !room.isAvailable()) {
+                room.freeRoom();
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+public class HotelBookingSystem {
+    public static void main(String[] args) {
+        Hotel hotel = new Hotel();
+
+        // Adding rooms to the hotel
+        hotel.addRoom(new Room(101, 3499, "3BHK"));
+        hotel.addRoom(new Room(102, 2399, "2BHK"));
+        hotel.addRoom(new Room(103, 1999, "1BHK"));
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Welcome to ROYAL OASIS Hotel ");
+            System.out.println("\nPlease choose an option:");
+            System.out.println("1. Room Reservations");
+            System.out.println("2. Check-in/Check-out Billing");
+            System.out.println("3. Display Available Rooms");
+            System.out.println("4. Exit");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    hotel.displayAvailableRooms();
+                    break;
+                case 2:
+                    System.out.println("Choose an option:");
+                    System.out.println("1. Check-in");
+                    System.out.println("2. Check-out");
+                    int checkOption = scanner.nextInt();
+                    if (checkOption == 1) {
+                        System.out.println("Enter the room number to check in:");
+                        int roomToCheckIn = scanner.nextInt();
+                        if (hotel.checkIn(roomToCheckIn)) {
+                            System.out.println("Checked in successfully!");
+                        } else {
+                            System.out.println("Failed to check in. Room may not be available or invalid room number.");
+                        }
+                    } else if (checkOption == 2) {
+                        System.out.println("Enter the room number to check out:");
+                        int roomToCheckOut = scanner.nextInt();
+                        if (hotel.checkOut(roomToCheckOut)) {
+                            System.out.println("Checked out successfully!");
+                        } else {
+                            System.out.println("Failed to check out. Room may already be available or invalid room number.");
+                        }
+                    } else {
+                        System.out.println("Invalid option.");
+                    }
+                    break;
+                case 3:
+                    hotel.displayAvailableRooms();
+                    break;
+                case 4:
+                    System.out.println("Thank you for using ROYAL OASIS Hotel's system. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
